@@ -4,8 +4,11 @@ var Handlebars = require('Handlebars');
 var _ = require('lodash');
 var d3 = require('d3');
 var topojson = require('topojson');
-
+var $ = require('jQuery');
 var CONFIG = require('./config');
+
+var parties = CONFIG.parties;
+var leadingConstituenciesPromise = $.getJSON(CONFIG.apiBaseUrl + '/constituencies/results/parties.json?filters=leading');
 
 /**
  * Gets a slugified version of a string
@@ -33,25 +36,43 @@ function slugify(text) {
  */
 function Map(mapSelector, tableSelector) {
 
+    this.clickCbs = [];
+
+    this.marginalConstituenciesPromise = $.getJSON(CONFIG.apiBaseUrl + '/constituencies.json?filters=marginal');
+
     var parentElement = document.querySelector(mapSelector);
     var e = document.createElement('object');
+    var $e = $(e);
 
-    e.data = "/img/blank-simplified-map.svg";
-    e.type = "image/svg+xml";
-    e.width = 594;
-    e.height = 806;
+    $e.attr('data', '/img/blank-simplified-map.svg');
+    $e.attr('type', 'image/svg+xml');
+    //$e.css('width', '100%');
 
-    e.addEventListener('load', _.bind(this.onSvgLoaded, this));
+    this.loadedSvg = $.Deferred();
+
+    this.loadedGraphics = $.Deferred();
+
+    this.loadedSvg.then(this.onSvgLoaded.bind(this));
+
+    e.addEventListener('load', function (e) {
+        this.loadedSvg.resolve(e.target.getSVGDocument().documentElement);
+    }.bind(this));
+
 
     this.element = e;
+    this.$element = $e;
     this.tableSelector = tableSelector;
     this.centered = null;
     this.unit = 'wpc';
+
+    this.parentElement = parentElement;
 
     this.projection = d3.geo.albers().rotate([0, 0]);
     this.path = d3.geo.path().projection(this.projection);
 
     parentElement.appendChild(e);
+
+
 }
 
 /**
@@ -60,9 +81,10 @@ function Map(mapSelector, tableSelector) {
  *
  * @param {Object} e     The 'load' event
  */
-Map.prototype.onSvgLoaded = function onSvgLoaded(e) {
+Map.prototype.onSvgLoaded = function onSvgLoaded(svgDocument) {
 
-    var svgDocument = e.target.getSVGDocument().documentElement;
+    $(svgDocument).attr('viewBox', '0 0 594 806');
+
     //Hook up D3 to the SVG element
     var svg = d3.select(svgDocument);
     var graphics = svg.select('g');
@@ -74,14 +96,10 @@ Map.prototype.onSvgLoaded = function onSvgLoaded(e) {
         }
     }, this));
 
-    d3.json(CONFIG.apiBaseUrl + '/constituencies/results/parties.json?filters=leading', _.bind(function (error, constituencies) {
-        this.tabulate(graphics, constituencies);
-        this.mapConstituencyResults(constituencies);
-    }, this));
-
     d3.json('/json/gb/topo_wpc.json', _.bind(function (error, boundaries) {
         this.addClickListeners(graphics, boundaries);
     }, this));
+
 };
 
 /**
@@ -98,7 +116,13 @@ Map.prototype.addClickListeners = function addClickListeners(graphics, boundarie
 
     graphics.selectAll('.area')
         .data(topojson.feature(boundaries, boundaries.objects[this.unit]).features)
-        .on('click', toggleFunction);
+        .on('click', function (constituencyPath) {
+            toggleFunction(constituencyPath);
+            this.clickCbs.forEach(function (cb) {
+                cb(constituencyPath)
+            });
+        }.bind(this))
+    ;
 
     this.projection
         .scale(1)
@@ -106,12 +130,14 @@ Map.prototype.addClickListeners = function addClickListeners(graphics, boundarie
 
     // Compute correct bounds and scaling from the TopoJSON
     b = this.path.bounds(topojson.feature(boundaries, boundaries.objects[this.unit]));
-    s = .95 / Math.max((b[1][0] - b[0][0]) / this.element.width, (b[1][1] - b[0][1]) / this.element.height);
-    t = [(this.element.width - s * (b[1][0] + b[0][0])) / 2, (this.element.height - s * (b[1][1] + b[0][1])) / 2];
+    s = .95 / Math.max((b[1][0] - b[0][0]) / 594, (b[1][1] - b[0][1]) / 806);
+    t = [(594 - s * (b[1][0] + b[0][0])) / 2, (806 - s * (b[1][1] + b[0][1])) / 2];
 
     this.projection
         .scale(s)
         .translate(t);
+
+    this.loadedGraphics.resolve(graphics);
 
 };
 
@@ -131,8 +157,6 @@ Map.prototype.getToggleSelectedAreaFn = function toggleSelectedArea(graphics) {
     function toggleSelectedArea (constituencyPath) {
         // Handle map zooming
         var x, y, k;
-        var changedArea = false;
-        var slugified;
 
         if (constituencyPath && this.centered !== constituencyPath) {
             var centroid = this.path.centroid(constituencyPath);
@@ -140,11 +164,10 @@ Map.prototype.getToggleSelectedAreaFn = function toggleSelectedArea(graphics) {
             y = centroid[1];
             k = 8;
             this.centered = constituencyPath;
-            changedArea = true;
 
         } else {
-            x = this.element.width / 2;
-            y = this.element.height / 2;
+            x = 594 / 2;
+            y = 806 / 2;
             k = 1;
             this.centered = null;
         }
@@ -161,29 +184,68 @@ Map.prototype.getToggleSelectedAreaFn = function toggleSelectedArea(graphics) {
         d3.select('#data_table .selected')
             .classed({selected: false});
 
-        if (this.centered && changedArea) {
-            // Highlight corresponding table row
-
-            slugified = slugify(constituencyPath.properties.PCON13NM);
-            //Slightly irritating exception due to accent.
-            if (slugified === 'ynys-mon') {
-                slugified = 'ynys-mn';
-            }
-
-            d3.select('.' + slugified)
-                .classed({selected: true})
-                .node()
-                .scrollIntoView();
-        }
 
         // Zoom in or out of area
         graphics.transition()
             .duration(750)
-            .attr("transform", "translate(" + this.element.width / 2 + "," + this.element.height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+            .attr("transform", "translate(" + 594 / 2 + "," + 806 / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
             .style("stroke-width", 1 / k + "px");
+
+
     }
 
     return _.bind(toggleSelectedArea, this);
+
+};
+
+/**
+ * Zoom in to a constituency by specifying its slug
+ * @param slug
+ */
+Map.prototype.selectBySlug = function selectBySlug(slug) {
+    this.loadedGraphics.then(function (graphics) {
+
+        var mapElement = graphics.select('.' + slug);
+        this.getToggleSelectedAreaFn(graphics)(mapElement.data()[0]);
+
+    }.bind(this));
+};
+
+
+/**
+ * Reset the map size
+ */
+Map.prototype.reset = function reset () {
+    this.loadedGraphics.then(function (graphics) {
+
+        this.getToggleSelectedAreaFn(graphics)(null);
+
+
+    }.bind(this));
+};
+
+/**
+ * Reset all map colours
+ */
+Map.prototype.resetColours = function resetColours () {
+
+    leadingConstituenciesPromise.then(function (constituencies) {
+
+         this.loadedSvg.then(function (svgDoc) {
+
+             console.log('resetting colours');
+            _.forEach(constituencies, function (constituency) {
+                var slug = slugify(constituency.constituency_name);
+                var constituencyNode = svgDoc.querySelector('.' + slug);
+                constituencyNode.setAttribute('class', 'area ' + slug);
+                constituencyNode.style.fill = null;
+
+
+            });
+
+        });
+
+    }.bind(this));
 
 };
 
@@ -208,17 +270,100 @@ Map.prototype.tabulate = function tabulate(graphics, constituencies) {
     }, this));
 };
 
+
+/**
+ * Toggle different map modes
+ */
+
+Map.prototype.mapStrengthOfIssue = function mapStrengthOfIssue (issueSlug) {
+
+    this.resetColours();
+    $.getJSON(CONFIG.apiBaseUrl + '/constituencies/results/issues/' + issueSlug + '/parties.json?filters=leading')
+        .then(this.mapConstituencyParties.bind(this));
+
+};
+
+Map.prototype.mapConstituencyParties = function mapConstituencyParties (constituencies) {
+    this.loadedSvg.then(function (svgDoc) {
+
+        console.log('mapping');
+
+        _.forEach(constituencies, function (constituency) {
+            var constituencyNode = svgDoc.querySelector('.' + slugify(constituency.constituency_name));
+            constituencyNode.classList.add('party-' + constituency.party_name.toLowerCase().replace(/ /g, '-'));
+        });
+    });
+};
+
+
+Map.prototype.mapMarginalConstituencies = function mapMarginalConstituencies () {
+
+    var mapFn = this.mapConstituencyParties.bind(this);
+
+    this.resetColours();
+
+    this.marginalConstituenciesPromise.then(function (marginalConstituencies) {
+        leadingConstituenciesPromise.then(function (allConstituencies) {
+
+            mapFn(_.filter(allConstituencies, function (constituency) {
+                return _.find(marginalConstituencies, { constituency_name: constituency.constituency_name });
+            }));
+        });
+    });
+
+};
+
+Map.prototype.mapStrengthOfParty = function mapStrengthOfParty (partySlug) {
+
+    this.resetColours();
+    $.getJSON(CONFIG.apiBaseUrl + '/parties/' + partySlug + '/constituencies/results.json')
+
+        .then(function (constituencies) {
+
+            // Find maximum votes_percentage
+            // Find maximum votes_percentage
+            var max = 0.0;
+
+            _.forEach(constituencies, function (constituency) {
+                if (constituency.votes_percentage > max) {
+                    max = constituency.votes_percentage;
+                }
+            });
+
+            // Find party colours
+            for (var i = 0; i < parties.length; i++) {
+                if (partySlug == parties[i]['slug']) {
+                    var range = parties[i]['colour_scale'];
+                }
+            }
+
+            // Set colour scale
+            var colours = d3.scale.quantize().domain([0, max]).range(range);
+
+            this.loadedSvg.then(function (svgDoc) {
+                _.forEach(constituencies, function (constituency) {
+                    var constituencyNode = svgDoc.querySelector('.' + slugify(constituency.constituency_name));
+                    d3.select(constituencyNode)
+                        .style("fill", function () {
+                            if (constituency.votes_percentage == 0.0) {
+                                return "#c0c0c0"
+                            } else {
+                                return colours(constituency.votes_percentage);
+                            }
+                        });
+                });
+
+            });
+
+        }.bind(this))
+    ;
+};
+
 /**
  * Add classes on to the constituency paths in the SVG from a given set of constituency results
- *
- * @param {Object[]} constituencies   An array of constituency data from the API
  */
-Map.prototype.mapConstituencyResults = function mapConstituencyResults(constituencies) {
-    var svgDoc = this.element.contentDocument || this.element.getSVGDocument();
-    _.forEach(constituencies, function (constituency) {
-        var constituencyNode = svgDoc.querySelector('.' + slugify(constituency.constituency_name));
-        constituencyNode.classList.add('party-' + constituency.party_name.toLowerCase().replace(/ /g, '-'));
-    });
+Map.prototype.mapLeadingConstituencyResults = function mapLeadingConstituencyResults() {
+    leadingConstituenciesPromise.then(this.mapConstituencyParties.bind(this));
 };
 
 Handlebars.registerHelper('slugify', slugify);
