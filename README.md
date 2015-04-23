@@ -10,7 +10,16 @@ The Vote for Policies Data website is a static website (HTML/CSS/JavaScript) tha
 - [Browserify](http://browserify.org/)
 - [UglifyJS](http://lisperator.net/uglifyjs/)
 - [Watchify](https://github.com/substack/watchify)
-- [Node-Sass]https://www.npmjs.com/package/node-sass)
+- [Node-Sass](https://www.npmjs.com/package/node-sass)
+
+## Style Guide
+
+There are a set of style guidelines that have been developed for Vote
+for Policies. We're using them to make the Data site consistent in style
+as well. You can find them here: https://styleguide.voteforpolicies.org.uk/
+
+> This is a working document to outline how various components and
+  patterns should be used throughout the Vote for Policies website.
 
 ## Setting things up for development
 
