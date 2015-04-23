@@ -2,61 +2,87 @@
 layout: "default"
 title: ""
 ---
-            <div class="hero">
-                <div class="l-constrain">
-                    <h1 class="hero__impact">
-                        Vote for Policies Data
-                    </h1>
-                    <h2 class="hero__strapline">
-                        We've got lots of interesting data and we want to share it with you!
-                    </h2>
-                </div>
-            </div>
+<div class="v-home">
 
-            <div class="l-constrain">
-                <div class="l-constrain__inner">
-                    <div class="content__wrap">
-                        <span class="h-group__lead h3">Constituencies</span>
-                        <p style="margin-top: 20px; padding-left: 20px;">
-                            <a href="/constituencies/results">Constituency results</a><br>
-                            Charts showing party results in each constituency
-                        </p>
-                        <p style="padding-left: 20px;">
-                            <a href="/constituencies/leading-parties">Leading party for each constituency</a><br>
-                            A map of the UK showing which party is leading in each constituency
-                        </p>
-                    </div>
-                </div>
+  <div class="hero">
 
-                <div class="l-constrain__inner">
-                    <div class="content__wrap">
-                        <span class="h-group__lead h3">Countries</span>
-                        <p style="margin-top: 20px; padding-left: 20px;">
-                            <a href="/countries/results#countries/england">Country results</a><br>
-                            Charts showing party and issue results in each country
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div id="pie-chart-home">
 
-            <div class="hero">
-                <div class="l-constrain">
-                    <div class="l-constrain__inner">
-                            <div>
-                                <!-- Begin MailChimp Signup Form -->
-                                <form action="//voteforpolicies.us3.list-manage.com/subscribe/post?u=8d4ba3b0edc03f56d90535663&amp;id=484928f2ec" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
-                                  <label style="clear: both; display: block; padding: 2em 0 1em 0;" for="mce-EMAIL">We can let you know when there's new data to see or download...</label>
-                                  <input type="email" id="mce-EMAIL" name="EMAIL" placeholder="you@domain.com" class="tip form__input">
-                                  <input type="hidden" value="16" name="group[9637][16]" id="mce-group[9637]-9637-4">
-                                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                                  <div style="position: absolute; left: -5000px;"><input type="text" name="b_8d4ba3b0edc03f56d90535663_484928f2ec" tabindex="-1" value=""></div>
-                                  <div class="form__actions">
-                                    <button class="btn btn--medium btn--positive" type="submit" name="subscribe" id="mc-embedded-subscribe">Sign Up</button>
-                                  </div>
-                                </form>
-                                <!--End mc_embed_signup-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+
+        <div class="pie-chart-overlay">
+          <h1 class="hero__impact">
+              Vote for Policies Data
+          </h1>
+
+          <h2 class="hero__strapline">
+            <strong data-total-completed-surveys>500k</strong> completed surveys <br /> We've got alot of data to share
+          </h2>
+        </div>
+
+  </div>
+
+
+  <div class="l-constrain">
+
+    <div class="data-sections u-landmark--large">
+
+      <div class="l-grid l-grid--1to2-col">
+
+        <div class="l-grid-unit">
+
+            <h3 class="h3 data-sections__heading data-sections__heading--constituencies">Constituencies</h3>
+
+            <ul class="list-plain">
+              <li>
+                <a href="/constituencies/results">Constituency results</a>
+                <br>
+                Charts showing party results in each constituency
+              </li>
+              <li>
+                <a href="/constituencies/leading-parties">Leading party for each constituency</a><br>
+                A map of the UK showing which party is leading in each constituency
+              </li>
+            </ul>
+
+        </div>
+
+        <div class="l-grid-unit">
+            <h3 class="h3 data-sections__heading data-sections__heading--countries">Countries</h3>
+
+            <ul class="list-plain">
+              <li>
+                <a href="/countries/results#countries/england">Country results</a>
+                <br>
+                Charts showing party and issue results in each country
+              </li>
+            </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="panel panel--dark">
+    <div class="l-constrain">
+      <div class="footer__newsletter">
+
+          <!-- Mailchimp signup form -->
+          <form action="//voteforpolicies.us3.list-manage.com/subscribe/post?u=8d4ba3b0edc03f56d90535663&amp;id=484928f2ec" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+            <label class="form__label" for="mce-EMAIL">We can let you know when there's new data to see or download...</label>
+              <input type="email" id="mce-EMAIL" name="EMAIL" title="you@domain.com" placeholder="you@domain.com" class="tip form__input">
+              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+              <div style="position: absolute; left: -5000px;"><input type="text" name="b_8d4ba3b0edc03f56d90535663_484928f2ec" tabindex="-1" value=""></div>
+              <input class="btn btn--small btn--positive"  type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe">
+          </form>
+          <!-- End Mailchimp signup form -->
+
+      </div>
+    </div>
+
+  </div>

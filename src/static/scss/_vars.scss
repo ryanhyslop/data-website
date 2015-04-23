@@ -1,0 +1,97 @@
+/* =====================================
+    Vars
+    --------------
+    - Here we set variables that impact or are utilised by the rest of the style sheet
+================================= */
+
+
+/*
+ !Breakpoints
+ - These are 'poor' default, depending on application variables may not be appropriate but easier to remember throughout for
+ smaller projects
+ : use with @respond-min($bp-n) @respond-max($bp-n) mixins
+ ------------------------------ */
+$bp-mobile : 20em;
+$bp-tablet : 48em;
+$bp-desktop : 60em;
+
+
+
+/*
+ !Layout
+ ------------------------------ */
+
+$base-max-width : 65em;
+
+/*
+ !Typography
+ ------------------------------ */
+
+$base-font-size:    18px;
+
+$base-line-height:  27px;
+
+// Define a common margin based on typography
+
+$base-spacing-unit: $base-line-height;
+
+$half-spacing-unit: $base-spacing-unit / 2;
+
+$line-height-ratio: $base-line-height / $base-font-size;
+
+
+$h1-size:           30px;
+$h2-size:           24px;
+$h3-size:           18px;
+$h4-size:           16px;
+$h5-size:           16px;
+$h6-size:           16px;
+
+
+/*
+ !Colours
+ Prefixed with $c-
+ ------------------------------ */
+
+$c-black : #353535;
+$c-green : #55832A;
+$c-red: #832A2A;
+$c-grey: #EAEAEA;
+$c-dark-grey : #353535;
+$c-light-grey: #F7F7F7;
+
+$c-body : $c-black;
+$c-positive : $c-green;
+$c-negative : $c-red;
+
+$c-facebook : #3B5998;
+$c-twitter : #55ACEE;
+
+$lighten-amount: 20;
+
+/*
+   Party colours
+   ========================================================================== */
+$parties: (
+    labour: #D50000,
+    conservatives: #0087DC,
+    ni-conservatives: #0087DC,
+    scottish-conservatives: #0087DC,
+    liberal-democrats: #FDBB30,
+    green-party: #75A92D,
+    scottish-green-party: #00B543,
+    ukip: #800080,
+    democratic-unionist-party: #0E024A,
+    scottish-national-party: #000,
+    plaid-cymru: #3E8424,
+    sinn-fein: #006C2A,
+    sinn-féin: #006C2A,
+    social-democratic-and-labour-party: #006E51,
+    alliance-party-of-northern-ireland: #F8CE00
+);
+
+
+// /* ==========================================================================
+
+//    ========================================================================== */
+// $parties: 'labour', 'conservative', 'lib-dem', 'green', 'ukip', 'democratic-unionist', 'snp', 'sinn-fein', 'social-democratic-and-labour', 'alliance-party-of-northern-ireland';

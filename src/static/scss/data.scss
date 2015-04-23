@@ -10,7 +10,8 @@
  * Far from perfect but keeps us moving for now.
  *
  */
-
+ @import 'vars';
+ @import 'mixins';
 
 /**
  * Objects: Smaller re-usable styles
@@ -25,6 +26,7 @@
  */
 @import 'components/search-list';
 @import 'components/tabber';
+@import 'components/navigation';
 
 
 /**
@@ -32,6 +34,7 @@
  */
 @import 'views/consituency-search';
 @import 'views/map';
+@import 'views/home';
 
 
 /**

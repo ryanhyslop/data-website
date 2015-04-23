@@ -1,0 +1,112 @@
+/**
+ * Navigation
+ * extends .navigation
+ */
+
+ // Overriding a bit of a selector issue from main sheet
+  .navigation ul {
+    overflow: visible;
+  }
+    .navigation li:last-child a {
+      padding-right: .7em;
+    }
+
+    .navigation > ul > li:last-child a {
+      padding-right: 0;
+    }
+
+   .navigation li:first-child a {
+     font-weight:normal;
+   }
+
+   .navigation > ul > li:first-child a {
+     font-weight: 800;
+   }
+
+
+.navigation__subnav {
+  margin: 0;
+  padding: 0;
+  border-left: 5px solid #000;
+  
+  @include respond-min($bp-tablet) {
+    border: none;
+    border-top: 2px solid #eee;
+
+    position: absolute;
+    top: 100%;
+    left:0;
+    right: 0;
+    margin:0;
+    padding: 0;
+  }
+
+}
+
+.navigation__item--has-subnav {
+  margin: 0;
+  padding: 0;
+
+  .active {
+    @include respond-min($bp-tablet) {
+        border-bottom: 4px solid black;
+        z-index: 100;
+        position: relative;
+        margin-bottom: -2px;
+        display: block;
+    }
+  }
+}
+
+.navigation__dropdown {
+  margin: 0;
+  padding: 0;
+  border-left: 5px solid #000;
+  @include respond-min($bp-tablet) {
+    position: absolute;
+    top: 100%;
+    left: -9999px;
+    min-width: 100%;
+    border: 1px solid #eee;
+    border-top: 2px solid #eee;
+
+    .navigation__item--has-dropdown:hover & {
+      left: 0;
+    }
+  }
+}
+
+.navigation__item--has-dropdown {
+
+  .icon {
+    display: none;
+  }
+
+  @include respond-min($bp-tablet) {
+    position: relative;
+    .icon {
+      display: inline-block;
+      vertical-align: 2px;
+    }
+  }
+}
+
+.navigation__item--has-dropdown:hover {
+  background: #eee;
+}
+
+.navigation__dropdown-item {
+  a {
+    padding-left: 10px;
+  }
+  @include respond-min($bp-tablet) {
+    background: #eee;
+    float: none !important;
+    border-bottom: 1px solid #eee;
+    padding: 0 0.5em;
+    a {
+      white-space: nowrap;
+      padding: 1em 0;
+    }
+  }
+}

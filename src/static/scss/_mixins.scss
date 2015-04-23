@@ -1,0 +1,130 @@
+/* =====================================
+    Mixins
+================================= */
+
+/*
+   Respond
+ - Outputs all media queries and allows production of IE specific stylesheet
+     http://jakearchibald.github.com/sass-ie/
+   ========================================================================== */
+
+$fix-mqs: false !default;
+
+@mixin extend() {
+    @content
+}
+
+@mixin respond-min($width) {
+    @if $fix-mqs {
+        @if $fix-mqs >= $width {
+            @content;
+        }
+    } @else {
+        @media screen and (min-width: $width) {
+            @content;
+        }
+    }
+}
+
+@mixin respond-max($width) {
+    @if $fix-mqs {
+        @if $fix-mqs < $width {
+            @content;
+        }
+    } @else {
+        @media screen and (max-width: $width) {
+            @content;
+        }
+    }
+}
+
+$old-ie: false !default;
+
+@mixin old-ie {
+    @if $old-ie {
+        @content;
+    }
+}
+
+
+/*
+   Typography
+   ========================================================================== */
+
+@mixin font-sans() {
+    font-family: 'lato', arial, sans-serif;
+}
+
+@mixin font-serif() {
+    font-family: "adelle", georgia, serif;
+}
+
+
+@mixin font-size($size) {
+    font-size: $size;
+    font-size: rem($size);
+}
+
+
+/*
+   Opacity
+   ========================================================================== */
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+
+
+/*
+   Visually Hidden
+   ========================================================================== */
+@mixin visually-hidden() {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+@mixin visually-hidden--disable() {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+   Clearfix
+   ========================================================================== */
+
+@mixin cf() {
+
+    /*
+     * Clearfix: contain floats
+     *
+     * For modern browsers
+     * 1. The space content is one way to avoid an Opera bug when the
+     *    `contenteditable` attribute is included anywhere else in the document.
+     *    Otherwise it causes space to appear at the top and bottom of elements
+     *    that receive the `clearfix` class.
+     * 2. The use of `table` rather than `block` is only necessary if using
+     *    `:before` to contain the top-margins of child elements.
+     */
+
+    &:before,
+    &:after {
+        content: ' '; /* 1 */
+        display: table; /* 2 */
+    }
+
+    &:after {
+        clear: both;
+    }
+
+ }

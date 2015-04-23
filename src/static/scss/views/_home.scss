@@ -1,0 +1,67 @@
+/**
+ * Homepage specific styling
+ */
+.masthead {
+  margin-bottom: 40px;
+}
+
+.v-home {
+
+  #pie-chart-home {
+    height: 300px;
+    margin-bottom: -100px;
+  }
+
+  .pie-chart-overlay {
+    position: relative;
+    background: rgba(255,255,255,0.7);
+  }
+
+  .hero {
+    padding: 2% 5%;
+  }
+
+  .hero__impact {
+    line-height: 2;
+    margin-bottom:0;
+    font-weight:normal;
+    font-family: adelle,georgia,serif;
+  }
+
+  .hero__strapline {
+    font-size: 24px;
+    font-family: lato, serif;
+  }
+
+  .data-sections {
+
+    a {
+      color: #000;
+    }
+
+    li {
+      color: #666;
+    }
+
+  }
+
+  .data-sections__heading {
+    padding-top: 30px;
+    border-bottom: 1px solid #ccc;
+  }
+
+
+  .data-sections__heading--constituencies {
+    background: url(../img/heading__constituencies.png) no-repeat bottom right;
+  }
+
+  .data-sections__heading--countries {
+    background: url(../img/heading__countries.png) no-repeat bottom right;
+  }
+
+  .footer__newsletter {
+    @include respond-min($bp-tablet) {
+      padding: 0 15%;
+    }
+  }
+}
