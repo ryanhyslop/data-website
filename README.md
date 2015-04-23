@@ -10,7 +10,7 @@ The Vote for Policies Data website is a static website (HTML/CSS/JavaScript) tha
 - [Browserify](http://browserify.org/)
 - [UglifyJS](http://lisperator.net/uglifyjs/)
 - [Watchify](https://github.com/substack/watchify)
-- [Node-Sass]https://www.npmjs.com/package/node-sass)
+- [Node-Sass](https://www.npmjs.com/package/node-sass)
 
 # Style Guide
 
