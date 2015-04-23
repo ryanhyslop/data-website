@@ -12,7 +12,7 @@ The Vote for Policies Data website is a static website (HTML/CSS/JavaScript) tha
 - [Watchify](https://github.com/substack/watchify)
 - [Node-Sass](https://www.npmjs.com/package/node-sass)
 
-# Style Guide
+## Style Guide
 
 There are a set of style guidelines that have been developed for Vote
 for Policies. We're using them to make the Data site consistent in style
