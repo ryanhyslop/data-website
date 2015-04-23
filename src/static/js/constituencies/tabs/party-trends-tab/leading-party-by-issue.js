@@ -27,11 +27,7 @@ function LeadingPartyByIssue (parentTab, map) {
      * Party filter
      */
     router.get(/filter=leading-party-by-issue&issue=(.*)$/i, function (req) {
-
         var issueSlug = req.params[0];
-
-        console.log('Issue', issueSlug);
-
         this.selectBySlug(issueSlug);
         map.mapStrengthOfIssue(issueSlug);
 

@@ -234,14 +234,11 @@ Map.prototype.resetColours = function resetColours () {
 
          this.loadedSvg.then(function (svgDoc) {
 
-             console.log('resetting colours');
             _.forEach(constituencies, function (constituency) {
                 var slug = slugify(constituency.constituency_name);
                 var constituencyNode = svgDoc.querySelector('.' + slug);
                 constituencyNode.setAttribute('class', 'area ' + slug);
                 constituencyNode.style.fill = null;
-
-
             });
 
         });

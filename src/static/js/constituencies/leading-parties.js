@@ -149,7 +149,6 @@ function TabNavigation(map) {
         var newFilter = e.newURL.split('?');
 
         if (newFilter.length > 1) {
-            //console.log('resetting colours');
             //map.resetColours();
         } else if (this.filter) {
             window.history.pushState({path: e.newURL}, e.newURL, e.newURL + '?filter=' + this.filter);
