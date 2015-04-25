@@ -12,12 +12,14 @@ var issueResultsTemplatePromise = $.ajax({
     return Handlebars.compile(html);
 });
 
+
 var issueResultTemplatePromise = $.ajax({
     url: '/partials/results/issue-result.html',
     dataType: 'text'
 }).then(function (html) {
     return Handlebars.compile(html);
 });
+
 
 /**
  * Calculate the total votes for all parties for a particular issue
@@ -59,12 +61,13 @@ function formatIssuesForView(issues) {
  * @constructor
  */
 function IssueResults(issues, target) {
+
     this.target = target || '#issue-results';
 
     this.issues = formatIssuesForView(issues).map(function (issue, i) {
         issue.rank = i;
         return new IssueResult(issue);
-    });
+    }.bind(this));
 
     this.render();
 }
@@ -86,8 +89,9 @@ function IssueResult(issue) {
 IssueResult.prototype.render = function render() {
 
     var target = document.querySelector('.issue-' + this.issue_slug);
+    var promise = issueResultTemplatePromise;
 
-    issueResultTemplatePromise.then(function (compiledTemplateFn) {
+    promise.then(function (compiledTemplateFn) {
 
         target.innerHTML = compiledTemplateFn(this);
 
@@ -100,6 +104,12 @@ IssueResult.prototype.render = function render() {
         });
 
     }.bind(this));
+
+};
+
+IssueResult.prototype.clear = function clear() {
+
+    document.querySelector('.issue-' + this.issue_slug).innerHTML = '';
 
 };
 
@@ -119,8 +129,9 @@ IssueResult.prototype.selectResult = function selectResult(result) {
 IssueResult.prototype.renderSelected = function renderSelected() {
 
     var target = document.querySelector('.issue-' + this.issue_slug);
+    var promise = issueResultTemplatePromise;
 
-    issueResultTemplatePromise.then(function (compiledTemplateFn) {
+    promise.then(function (compiledTemplateFn) {
 
         var className = 'result-issue-total__leader';
         target.getElementsByClassName(className)[0].innerHTML = $(compiledTemplateFn(this)).find('.' + className).html();
@@ -134,7 +145,9 @@ IssueResult.prototype.renderSelected = function renderSelected() {
  */
 IssueResults.prototype.render = function render() {
     var target = document.querySelector(this.target);
-    issueResultsTemplatePromise.then(function (compiledTemplateFn) {
+    var promise = issueResultsTemplatePromise;
+
+    promise.then(function (compiledTemplateFn) {
 
         target.innerHTML = compiledTemplateFn({
             issues: this.issues

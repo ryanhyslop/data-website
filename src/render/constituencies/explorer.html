@@ -1,0 +1,150 @@
+---
+layout: "default"
+title: "Constituency Explorer"
+scripts: ['/dist/js/vendor/list.1.1.1.min.js']
+---
+<div class="hero">
+    <div class="l-constrain">
+        <h1 class="hero__impact">
+            Vote for Policies Data
+        </h1>
+
+        <h2 class="hero__strapline">
+            Constituency explorer
+        </h2>
+
+    </div>
+</div>
+
+
+<div class="l-constrain">
+    <div class="l-grid l-grid--1to2-col">
+
+        <div class="l-grid-unit">
+            <section id="map">
+            </section>
+            <div id="map-key">
+
+            </div>
+        </div>
+
+        <div class="l-grid-unit">
+
+            <nav class="tabber__nav">
+            </nav>
+
+            <div id="constituency-tab-container" style="display: none;">
+                <div id="constituencies-list"></div>
+                <div id="pie-chart-results"></div>
+            </div>
+
+            <div id="trends-tab-container" style="display: none;">
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="l-constrain">
+    <div class="l-constrain__inner">
+        <div class="content__wrap">
+            <p>Data updated every hour</p>
+            <a href="https://github.com/martinjc/UK-GeoJSON">GeoJSON and TopoJSON UK Boundary Data</a> by Martin Chorley
+            is licensed under a Creative Commons Attribution 4.0 International License
+        </div>
+    </div>
+</div>
+
+<script id="constituency-list-template" type="text/x-handlebars-template">
+    <div class="l-constrain l-constrain--narrow l-constrain--no-overflow">
+        <div id="constituency-search" class="search-list constituency-search">
+            <fieldset>
+                <label for="consituency-search-input" class="form__label u-visuallyhidden">Search for a
+                    consitutency:</label>
+                <input id="consituency-search-input" class="search form__input"
+                       placeholder="Enter a constituency name"/>
+            </fieldset>
+            <ul class="search-list__results list">
+                {{#each constituencies}}
+                <li>
+                    <a href="#constituencies/{{constituency_slug}}" data-constituency-slug="{{constituency_slug}}"
+                       data-constituency-name="{{constituency_name}}" class="constituency">{{constituency_name}}</a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script id="party-trends-navigation-template" type="text/x-handlebars-template">
+
+    <div class="trends-menu">
+        {{#each items}}
+        <a href="#party-trends?filter={{ link }}"
+           class="btn l-flag{{#unless selected}} btn--highlight-block{{/unless}}">
+        <span class="l-flag__body">
+        {{ name }}
+        </span>
+        </a>
+        {{/each}}
+    </div>
+
+    <div class="menu-item">
+
+    </div>
+
+</script>
+
+<script id="party-trends-chrolopleth-template" type="text/x-handlebars-template">
+    <a class="btn l-flag btn-clear-filter" href="#party-trends">&#x25c0; Strength of political parties</a>
+    <hr>
+    {{#each items}}
+    <div class="party-block party-block--{{slug}}" {{#if selected}}style="background-color: #F7F7C4" {{/if}}>
+    <a class="h-group__main filter-party-link" href="#party-trends?filter=strength-of-political-parties&party={{slug}}">
+        <span class="party-block__party"> {{name}} </span>
+        <img src="/img/parties/{{ slug }}.png" class="party-block__party-logo" alt="">
+    </a>
+    </div>
+    {{/each}}
+</script>
+
+<script id="leading-party-by-issue-template" type="text/x-handlebars-template">
+    <a class="btn l-flag btn-clear-filter" href="#party-trends">&#x25c0; Leading party by issue</a>
+    <hr>
+    {{#each items}}
+    <div class="party-block"{{#if selected}} style="background-color: #F7F7C4"{{/if}}>
+    <a class="h-group__main filter-party-link" href="#party-trends?filter=leading-party-by-issue&issue={{slug}}">
+        <span class="party-block__party"> {{name}} </span>
+    </a>
+    </div>
+    {{/each}}
+</script>
+
+<script id="tabber-navigation-template" type="text/x-handlebars-template">
+    <div class="l-constrain l-constrain--no-overflow l-constrain--relative u-no-mobile-padding tabber__nav--expanded">
+        <ul role="part">
+            {{#each items}}
+            <li role="presentation" class="tabber__nav__expand">
+                <a href="#{{ link }}" role="tab" aria-controls="{{link}}" {{#if selected}} aria-selected="true" {{/if}}
+                class="tabber__nav__link">
+                {{name}}
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script id="range-template" type="text/x-handlebars-template">
+    <div style="text-align:center;">
+        {{#each range}}
+        <div style="width:20px; height: 20px; display:inline-block; background-color:{{this}}">
+        </div>
+        {{/each}}
+    </div>
+</script>
