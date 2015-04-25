@@ -18,7 +18,7 @@ var cached = {};
  * @constructor
  */
 function CountryTabs(countries, templateSelector, templateTargetSelector) {
-    this.countries = _.reject(countries, 'slug', 'northern-ireland');
+    this.countries = countries;
 
     this.templateSelector = templateSelector;
     this.templateTargetSelector = templateTargetSelector;
