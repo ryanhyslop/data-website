@@ -16,11 +16,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- prod:oldie.css -->
-        <!--[if lte IE 8]><link rel="stylesheet" href="<%- @asset('/dist/css/oldie.css/oldie.css') %>"><![endif]-->
+        <!--[if lte IE 8]><link rel="stylesheet" href="<%- @asset('/dist/css/oldie.css/oldie.css?v=2') %>"><![endif]-->
         <!-- endbuild -->
 
         <!-- prod:frontend.css -->
-        <!--[if gt IE 8]><!--><link rel="stylesheet" href="<%- @asset('/dist/css/frontend.css/frontend.css') %>"><!--<![endif]-->
+        <!--[if gt IE 8]><!--><link rel="stylesheet" href="<%- @asset('/dist/css/frontend.css/frontend.css?v=2') %>"><!--<![endif]-->
         <!-- endbuild -->
 
         <link rel="stylesheet" type="text/css" href="<%- @asset('/css/data.css') %>">
