@@ -62,12 +62,13 @@ ChloroplethTab.prototype.resetSelected = function resetSelected () {
 
 ChloroplethTab.prototype.render = function render() {
 
-    //@TODO These are returning borked responses...
+    // Remove NI parties as we don't have mapping data for NI
     var rejected = [
         'alliance-party-of-northern-ireland',
         'democratic-unionist-party',
         'social-democratic-and-labour-party',
-        'sinn-fein'
+        'sinn-fein',
+        'ulster-unionist-party'
     ];
 
     this.partiesPromise.then(function (parties) {

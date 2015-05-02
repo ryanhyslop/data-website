@@ -237,8 +237,10 @@ Map.prototype.resetColours = function resetColours () {
             _.forEach(constituencies, function (constituency) {
                 var slug = slugify(constituency.constituency_name);
                 var constituencyNode = svgDoc.querySelector('.' + slug);
-                constituencyNode.setAttribute('class', 'area ' + slug);
-                constituencyNode.style.fill = null;
+                if (constituencyNode) {
+                    constituencyNode.setAttribute('class', 'area ' + slug);
+                    constituencyNode.style.fill = null;
+                }
             });
 
         });
@@ -287,7 +289,9 @@ Map.prototype.mapConstituencyParties = function mapConstituencyParties (constitu
 
         _.forEach(constituencies, function (constituency) {
             var constituencyNode = svgDoc.querySelector('.' + slugify(constituency.constituency_name));
-            constituencyNode.classList.add('party-' + constituency.party_name.toLowerCase().replace(/ /g, '-'));
+            if (constituencyNode) {
+                constituencyNode.classList.add('party-' + constituency.party_name.toLowerCase().replace(/ /g, '-'));
+            }
         });
     });
 };
